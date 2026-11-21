@@ -373,7 +373,7 @@ function visible(s) {
 }
 
 // ---------------------------------------------------------------- Karte
-const map = L.map("map", { preferCanvas: true, zoomControl: true, attributionControl: true }).setView([state.center.lat, state.center.lng], 13);
+const map = L.map("map", { zoomControl: true, attributionControl: true }).setView([state.center.lat, state.center.lng], 13);
 let tiles;
 function setTiles() {
   const dark = document.documentElement.dataset.theme === "dark" ||
@@ -424,10 +424,11 @@ function drawMarkers() {
 
 function drawCircle() {
   const c = [state.center.lat, state.center.lng];
-  const style = { color: cssVar("--fg"), weight: 1, opacity: .35, dashArray: "4 4", fill: true, fillColor: cssVar("--fg"), fillOpacity: .03, interactive: false };
+  // gleicher Canvas wie die Studio-Punkte – ein zweiter Canvas darüber würde alle Klicks abfangen
+  const style = { renderer, color: cssVar("--fg"), weight: 1, opacity: .35, dashArray: "4 4", fill: true, fillColor: cssVar("--fg"), fillOpacity: .03, interactive: false };
   if (!circle) circle = L.circle(c, { ...style, radius: state.radius * 1000 }).addTo(map);
   else { circle.setLatLng(c); circle.setRadius(state.radius * 1000); circle.setStyle(style); }
-  const cs = { radius: 5, color: cssVar("--panel"), weight: 2, fillColor: cssVar("--fg"), fillOpacity: 1, interactive: false };
+  const cs = { renderer, radius: 5, color: cssVar("--panel"), weight: 2, fillColor: cssVar("--fg"), fillOpacity: 1, interactive: false };
   if (!centerMark) centerMark = L.circleMarker(c, cs).addTo(map); else { centerMark.setLatLng(c); centerMark.setStyle(cs); }
 }
 
